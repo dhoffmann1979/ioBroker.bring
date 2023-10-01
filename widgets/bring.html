@@ -129,6 +129,18 @@
                 "es": "Ancho y alto por articulo en px",
                 "pl": "Szerokość i wysokość na element w px",
                 "zh-cn": "px中每个项目的宽度和高度"
+            },
+            "show-list-view": {
+                "en": "Show Items in a List-View",
+                "de": "Einträge in Listenansicht darstellen",
+                "ru": "Отображение записей в виде списка",
+                "pt": "Apresentar entradas na vista de lista",
+                "nl": "Vermeldingen weergeven in lijstweergave",
+                "fr": "Afficher les entrées dans une vue en liste",
+                "it": "Visualizzazione delle voci nella vista elenco",
+                "es": "Mostrar entradas en vista de lista",
+                "pl": "Wyświetlanie wpisów w widoku listy",
+                "zh-cn": "在列表视图中显示条目"
             }
         });
     }
@@ -281,6 +293,8 @@
         var knownList = [];
         var knownSpec = [];
         var maxWidth = vis.widgets[wid].data['max-width-item'];
+        var showListView = vis.widgets[wid].data['show-list-view'];
+        var itemClass = '';
 
         // get current list
         try {
@@ -343,22 +357,34 @@
 
             var newItemReplaced = newItems[k].replace(/ /g, '_');
 
-            var html = '<div class="bring-item" data-desc="' + spec[k] + '" id=' + wid + '-' + newItemReplaced +
-                ' onclick="vis.binds[\'bring\'].onclick(this)" ' +
-                'style="max-width: ' + maxWidth + 'px; min-width: ' + maxWidth + 'px; ' +
-                'max-height: ' + maxWidth + 'px; min-height: ' + maxWidth + 'px;"' +
-                ' data-item="' + newItems[k].replace(/ /g, '_') + '"> ' +
-                '<img src="https://web.getbring.com/assets/images/items/' + newItemReplaced.toLowerCase()
-                    .replace(/ä/g, 'ae').replace(/ö/g, 'oe').replace(/ü/g, 'ue') + '.png" ' +
-                'onerror="this.onerror=null;this.src=\'https://web.getbring.com/assets/images/items/' + alternative + '.png\'" ' +
-                'alt=' + newItems[k] + ' class="item-image" id="' + wid + '-img-' + newItemReplaced + '"' +
-                'style="height: calc(0.43 * ' + maxWidth + 'px); padding-top: calc(0.172 * ' + maxWidth + 'px)">' +
-                '<div class="item-name" style="height: calc(0.2013 * ' + maxWidth + 'px);' +
-                'margin-top: calc(-0.0431 * ' + maxWidth + 'px);">' +
-                nameFromDict + '</div>' +
-                '<div class="item-desc" style="height: calc(0.2155 * ' + maxWidth + 'px);' +
-                'margin-top: calc(-0.0431 * ' + maxWidth + 'px);">' +
-                spec[k] + '</div></div>';
+                if (showListView) {
+                        var html = '<div class="bring-item bring-item-row' + itemClass + '" data-desc="' + spec[k] + '" id=' + wid + '-' + newItemReplaced +
+                          ' onclick="vis.binds[\'bring\'].onclick(this)" ' +
+                          ' data-item="' + newItems[k].replace(/ /g, '_') + '"> ' +
+                          '<img src="https://web.getbring.com/assets/images/items/' + newItemReplaced.toLowerCase()
+                            .replace(/ä/g, 'ae').replace(/ö/g, 'oe').replace(/ü/g, 'ue') + '.png" ' +
+                          'onerror="this.onerror=null;this.src=\'https://web.getbring.com/assets/images/items/' + alternative + '.png\'" ' +
+                          'alt=' + newItems[k] + ' class="item-image" id="' + wid + '-img-' + newItemReplaced + '"' +
+                          '<div class="item-name">' + nameFromDict + '</div>' +
+                          '<div class="item-desc">' + spec[k] + '</div></div>';
+                } else {
+                        var html = '<div class="bring-item ' + itemClass + '" data-desc="' + spec[k] + '" id=' + wid + '-' + newItemReplaced +
+                        ' onclick="vis.binds[\'bring\'].onclick(this)" ' +
+                        'style="max-width: ' + maxWidth + 'px; min-width: ' + maxWidth + 'px; ' +
+                        'max-height: ' + maxWidth + 'px; min-height: ' + maxWidth + 'px;"' +
+                        ' data-item="' + newItems[k].replace(/ /g, '_') + '"> ' +
+                        '<img src="https://web.getbring.com/assets/images/items/' + newItemReplaced.toLowerCase()
+                        .replace(/ä/g, 'ae').replace(/ö/g, 'oe').replace(/ü/g, 'ue') + '.png" ' +
+                        'onerror="this.onerror=null;this.src=\'https://web.getbring.com/assets/images/items/' + alternative + '.png\'" ' +
+                        'alt=' + newItems[k] + ' class="item-image" id="' + wid + '-img-' + newItemReplaced + '"' +
+                        'style="height: calc(0.43 * ' + maxWidth + 'px); padding-top: calc(0.172 * ' + maxWidth + 'px)">' +
+                        '<div class="item-name" style="height: calc(0.2013 * ' + maxWidth + 'px);' +
+                        'margin-top: calc(-0.0431 * ' + maxWidth + 'px);">' +
+                        nameFromDict + '</div>' +
+                        '<div class="item-desc" style="height: calc(0.2155 * ' + maxWidth + 'px);' +
+                        'margin-top: calc(-0.0431 * ' + maxWidth + 'px);">' +
+                        spec[k] + '</div></div>';
+                }
 
             $('#' + wid + '-shoppinglist').append(html);
 
@@ -570,7 +596,7 @@
         type="text/ejs"
         class="vis-tpl"
         data-vis-prev='<img src="widgets/bring/img/shopping-list.png"></img>'
-        data-vis-attrs="oid-list/id,list.json;text-for-adding/text;max-width-item[116]/number"
+        data-vis-attrs="oid-list/id,list.json;text-for-adding/text;max-width-item[116]/number;show-list-view/checkbox"
         data-vis-set="bring"
         data-vis-type="ctrl"
         data-vis-update-style="true"
